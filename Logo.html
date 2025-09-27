@@ -1,110 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlueVerse Style Logo Generator</title>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <!-- Font mirip Blue Archive -->
-  <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@1,700&display=swap" rel="stylesheet">
+  <title>Blue Archive Logo Generator (Official Style)</title>
   <style>
     body {
-      font-family: 'Exo', sans-serif;
-      text-align: center;
-      background: #fff;
+      font-family: Arial, sans-serif;
+      background: #0e1525;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
-    #controls {
-      margin-bottom: 15px;
-    }
-    input {
-      margin: 5px;
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: none;
-      background: #1e90ff;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0c70d4;
-    }
-    #logo-container {
-      display: inline-block;
-      margin-top: 20px;
-    }
-    svg text {
-      font-family: 'Exo', sans-serif;
-      font-style: italic;
-      font-weight: 700;
-      letter-spacing: -2px;
-    }
+    h1 { font-size: 22px; margin-bottom: 10px; }
+    .controls { margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .controls input { padding: 6px 10px; border-radius: 6px; border: none; }
+    button { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; background: #1890ff; color: white; }
+    #svgWrapper { background: white; padding: 20px; border-radius: 10px; }
   </style>
 </head>
 <body>
-  <h2>BlueVerse Style Logo Generator</h2>
-
-  <div id="controls">
-    <input id="text1" type="text" value="Blue" placeholder="Tulisan kiri (biru)">
-    <input id="text2" type="text" value="Verse" placeholder="Tulisan kanan (hitam)">
-    <input id="subtext" type="text" value="Unit1" placeholder="Tulisan kecil bawah kanan">
-    <br>
-    <button onclick="renderLogo()">Generate</button>
-    <button onclick="savePNG()">Save as PNG</button>
+  <h1>Blue Archive Style Logo Generator</h1>
+  <div class="controls">
+    <input id="word1" value="Blue" />
+    <input id="word2" value="Archive" />
+    <input id="word3" value="Logo Generator" />
+    <button onclick="renderLogo()">Render</button>
+    <button onclick="downloadSVG()">Download SVG</button>
+    <button onclick="downloadPNG()">Download PNG</button>
   </div>
-
-  <div id="logo-container"></div>
+  <div id="svgWrapper"></div>
 
   <script>
-    function renderLogo() {
-      const t1 = document.getElementById("text1").value;
-      const t2 = document.getElementById("text2").value;
-      const sub = document.getElementById("subtext").value;
+    function renderLogo(){
+      const w1 = document.getElementById('word1').value;
+      const w2 = document.getElementById('word2').value;
+      const w3 = document.getElementById('word3').value;
 
       const svg = `
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" viewBox="0 0 600 200">
-  <!-- Orbit ellipse -->
-  <ellipse cx="330" cy="85" rx="130" ry="42"
-    transform="rotate(-18 330 85)"
-    stroke="#1e90ff" stroke-width="1.5" fill="none" />
+      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="240" viewBox="0 0 800 240">
+        <defs>
+          <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#0ea5ff"/>
+            <stop offset="100%" stop-color="#1890ff"/>
+          </linearGradient>
+        </defs>
 
-  <!-- Cross light -->
-  <line x1="330" y1="15" x2="330" y2="160"
-    stroke="#1e90ff" stroke-width="2" />
-  <line x1="270" y1="40" x2="390" y2="130"
-    stroke="#1e90ff" stroke-width="2" />
+        <!-- Orbit -->
+        <g transform="translate(400,80)">
+          <ellipse rx="210" ry="60" fill="none" stroke="#666" stroke-width="4" transform="rotate(-18)"/>
+          <line x1="-60" y1="-70" x2="60" y2="70" stroke="#0ea5ff" stroke-width="6" stroke-linecap="round"/>
+          <line x1="45" y1="-70" x2="-45" y2="70" stroke="#06a6ff" stroke-width="4" stroke-linecap="round"/>
+        </g>
 
-  <!-- Text utama -->
-  <text x="60" y="105" font-size="72">
-    <tspan fill="#1e90ff">${t1}</tspan><tspan fill="#000">${t2}</tspan>
-  </text>
-
-  <!-- Subtext -->
-  <text x="420" y="160" font-size="22" fill="#444" font-style="italic">${sub}</text>
-</svg>`;
-
-      document.getElementById("logo-container").innerHTML = svg;
+        <!-- Texts -->
+        <text x="40" y="120" font-family="Arial Black, sans-serif" font-size="78" font-style="italic" fill="url(#blueGrad)">
+          ${w1}
+        </text>
+        <text x="${40 + w1.length*45}" y="120" font-family="Arial Black, sans-serif" font-size="78" font-style="italic" fill="#222">
+          ${w2}
+        </text>
+        <text x="${40 + w1.length*45}" y="170" font-family="Arial, sans-serif" font-size="20" fill="#444">
+          ${w3}
+        </text>
+      </svg>`;
+      document.getElementById('svgWrapper').innerHTML = svg;
     }
 
-    function savePNG() {
-      const container = document.getElementById("logo-container");
-      html2canvas(container, { backgroundColor: null }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "logo.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      });
+    function downloadSVG(){
+      const svgEl = document.querySelector('#svgWrapper svg');
+      const data = new XMLSerializer().serializeToString(svgEl);
+      const blob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'logo.svg';
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
-    // Render pertama
+    function downloadPNG(){
+      const svgEl = document.querySelector('#svgWrapper svg');
+      const data = new XMLSerializer().serializeToString(svgEl);
+      const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+      const url = URL.createObjectURL(svgBlob);
+      const img = new Image();
+      img.onload = function(){
+        const canvas = document.createElement('canvas');
+        canvas.width = 800;
+        canvas.height = 240;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        canvas.toBlob(function(blob){
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'logo.png';
+          a.click();
+        });
+      };
+      img.src = url;
+    }
+
     renderLogo();
   </script>
 </body>

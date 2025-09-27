@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Blue Archive Logo Generator (Official Style)</title>
+  <title>Blue Archive Logo Generator (Fixed Layout)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,7 +13,6 @@
       align-items: center;
       padding: 20px;
     }
-    h1 { font-size: 22px; margin-bottom: 10px; }
     .controls { margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px; }
     .controls input { padding: 6px 10px; border-radius: 6px; border: none; }
     button { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; background: #1890ff; color: white; }
@@ -21,25 +20,47 @@
   </style>
 </head>
 <body>
-  <h1>Blue Archive Style Logo Generator</h1>
+  <h2>Blue Archive Style Logo Generator</h2>
   <div class="controls">
     <input id="word1" value="Blue" />
     <input id="word2" value="Archive" />
     <input id="word3" value="Logo Generator" />
     <button onclick="renderLogo()">Render</button>
+  </div>
+  <div class="controls">
     <button onclick="downloadSVG()">Download SVG</button>
     <button onclick="downloadPNG()">Download PNG</button>
   </div>
   <div id="svgWrapper"></div>
 
   <script>
-    function renderLogo(){
+    function renderLogo() {
       const w1 = document.getElementById('word1').value;
       const w2 = document.getElementById('word2').value;
       const w3 = document.getElementById('word3').value;
 
+      const fontSize = 78;
+      const startX = 40;
+      const baselineY = 120;
+
+      // posisi kata pertama
+      const w1X = startX;
+      // panjang kasar kata pertama
+      const w1Width = w1.length * (fontSize * 0.55);
+      // posisi kata kedua setelah kata pertama
+      const w2X = w1X + w1Width + 10;
+
+      // posisi orbit di sekitar huruf A dari kata kedua
+      const orbitX = w2X + 30; 
+      const orbitY = baselineY - 35;
+
+      // subtitle rata kanan dengan kata kedua
+      const w2Width = w2.length * (fontSize * 0.55);
+      const subtitleX = w2X + w2Width - (w3.length * 9); 
+      const subtitleY = baselineY + 45;
+
       const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="800" height="240" viewBox="0 0 800 240">
+      <svg xmlns="http://www.w3.org/2000/svg" width="900" height="240" viewBox="0 0 900 240">
         <defs>
           <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="#0ea5ff"/>
@@ -47,28 +68,36 @@
           </linearGradient>
         </defs>
 
-        <!-- Orbit -->
-        <g transform="translate(400,80)">
-          <ellipse rx="210" ry="60" fill="none" stroke="#666" stroke-width="4" transform="rotate(-18)"/>
-          <line x1="-60" y1="-70" x2="60" y2="70" stroke="#0ea5ff" stroke-width="6" stroke-linecap="round"/>
-          <line x1="45" y1="-70" x2="-45" y2="70" stroke="#06a6ff" stroke-width="4" stroke-linecap="round"/>
-        </g>
-
-        <!-- Texts -->
-        <text x="40" y="120" font-family="Arial Black, sans-serif" font-size="78" font-style="italic" fill="url(#blueGrad)">
+        <!-- Kata pertama -->
+        <text x="${w1X}" y="${baselineY}" font-family="Arial Black, sans-serif" 
+              font-size="${fontSize}" font-style="italic" fill="url(#blueGrad)">
           ${w1}
         </text>
-        <text x="${40 + w1.length*45}" y="120" font-family="Arial Black, sans-serif" font-size="78" font-style="italic" fill="#222">
+
+        <!-- Kata kedua -->
+        <text x="${w2X}" y="${baselineY}" font-family="Arial Black, sans-serif" 
+              font-size="${fontSize}" font-style="italic" fill="#222">
           ${w2}
         </text>
-        <text x="${40 + w1.length*45}" y="170" font-family="Arial, sans-serif" font-size="20" fill="#444">
+
+        <!-- Orbit & silang -->
+        <g transform="translate(${orbitX},${orbitY})">
+          <ellipse rx="110" ry="32" fill="none" stroke="#555" stroke-width="3" transform="rotate(-18)"/>
+          <line x1="-30" y1="-40" x2="30" y2="40" stroke="#0ea5ff" stroke-width="5" stroke-linecap="round"/>
+          <line x1="25" y1="-40" x2="-25" y2="40" stroke="#06a6ff" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- Subtitle -->
+        <text x="${subtitleX}" y="${subtitleY}" font-family="Arial, sans-serif" 
+              font-size="20" fill="#555">
           ${w3}
         </text>
       </svg>`;
+
       document.getElementById('svgWrapper').innerHTML = svg;
     }
 
-    function downloadSVG(){
+    function downloadSVG() {
       const svgEl = document.querySelector('#svgWrapper svg');
       const data = new XMLSerializer().serializeToString(svgEl);
       const blob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
@@ -80,7 +109,7 @@
       URL.revokeObjectURL(url);
     }
 
-    function downloadPNG(){
+    function downloadPNG() {
       const svgEl = document.querySelector('#svgWrapper svg');
       const data = new XMLSerializer().serializeToString(svgEl);
       const svgBlob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
@@ -88,7 +117,7 @@
       const img = new Image();
       img.onload = function(){
         const canvas = document.createElement('canvas');
-        canvas.width = 800;
+        canvas.width = 900;
         canvas.height = 240;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0);

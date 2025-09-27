@@ -2,41 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>BlueVerse Logo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueVerse Style Logo Generator</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- Font mirip Blue Archive -->
+  <link href="https://fonts.googleapis.com/css2?family=Exo:ital,wght@1,700&display=swap" rel="stylesheet">
   <style>
     body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: 'Exo', sans-serif;
+      text-align: center;
       background: #fff;
-    }
-    #logo {
-      display: inline-block;
       padding: 20px;
     }
-    .blue {
-      fill: #1e90ff;
-      font-weight: bold;
-      font-style: italic;
+    #controls {
+      margin-bottom: 15px;
     }
-    .black {
-      fill: #222;
-      font-weight: bold;
-      font-style: italic;
-    }
-    .subtext {
-      fill: #444;
-      font-size: 28px;
-      font-style: italic;
+    input {
+      margin: 5px;
+      padding: 8px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
     button {
-      margin-top: 20px;
+      margin: 10px;
       padding: 10px 20px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 6px;
       border: none;
       background: #1e90ff;
       color: white;
@@ -45,44 +37,75 @@
     button:hover {
       background: #0c70d4;
     }
+    #logo-container {
+      display: inline-block;
+      margin-top: 20px;
+    }
+    svg text {
+      font-family: 'Exo', sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      letter-spacing: -2px;
+    }
   </style>
 </head>
 <body>
-  <div id="logo">
-    <svg width="600" height="250" xmlns="http://www.w3.org/2000/svg">
-      <!-- Tulisan BlueVerse -->
-      <text x="40" y="120" font-size="80" letter-spacing="-2px">
-        <tspan class="blue">Blue</tspan><tspan class="black">Verse</tspan>
-      </text>
+  <h2>BlueVerse Style Logo Generator</h2>
 
-      <!-- Orbit ellipse -->
-      <ellipse cx="320" cy="90" rx="120" ry="40"
-        stroke="#000" stroke-width="3" fill="none"
-        transform="rotate(-15,320,90)" />
-
-      <!-- Cross light -->
-      <line x1="320" y1="10" x2="320" y2="170"
-        stroke="#1e90ff" stroke-width="4" />
-      <line x1="250" y1="50" x2="420" y2="130"
-        stroke="#1e90ff" stroke-width="4" />
-
-      <!-- Subtext Unit1 -->
-      <text x="420" y="190" class="subtext">Unit1</text>
-    </svg>
+  <div id="controls">
+    <input id="text1" type="text" value="Blue" placeholder="Tulisan kiri (biru)">
+    <input id="text2" type="text" value="Verse" placeholder="Tulisan kanan (hitam)">
+    <input id="subtext" type="text" value="Unit1" placeholder="Tulisan kecil bawah kanan">
+    <br>
+    <button onclick="renderLogo()">Generate</button>
+    <button onclick="savePNG()">Save as PNG</button>
   </div>
 
-  <button onclick="saveLogo()">Save as PNG</button>
+  <div id="logo-container"></div>
 
   <script>
-    function saveLogo() {
-      const logo = document.getElementById("logo");
-      html2canvas(logo, {backgroundColor: null}).then(canvas => {
+    function renderLogo() {
+      const t1 = document.getElementById("text1").value;
+      const t2 = document.getElementById("text2").value;
+      const sub = document.getElementById("subtext").value;
+
+      const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" viewBox="0 0 600 200">
+  <!-- Orbit ellipse -->
+  <ellipse cx="330" cy="85" rx="130" ry="42"
+    transform="rotate(-18 330 85)"
+    stroke="#1e90ff" stroke-width="1.5" fill="none" />
+
+  <!-- Cross light -->
+  <line x1="330" y1="15" x2="330" y2="160"
+    stroke="#1e90ff" stroke-width="2" />
+  <line x1="270" y1="40" x2="390" y2="130"
+    stroke="#1e90ff" stroke-width="2" />
+
+  <!-- Text utama -->
+  <text x="60" y="105" font-size="72">
+    <tspan fill="#1e90ff">${t1}</tspan><tspan fill="#000">${t2}</tspan>
+  </text>
+
+  <!-- Subtext -->
+  <text x="420" y="160" font-size="22" fill="#444" font-style="italic">${sub}</text>
+</svg>`;
+
+      document.getElementById("logo-container").innerHTML = svg;
+    }
+
+    function savePNG() {
+      const container = document.getElementById("logo-container");
+      html2canvas(container, { backgroundColor: null }).then(canvas => {
         const link = document.createElement("a");
-        link.download = "blueverse_logo.png";
-        link.href = canvas.toDataURL();
+        link.download = "logo.png";
+        link.href = canvas.toDataURL("image/png");
         link.click();
       });
     }
+
+    // Render pertama
+    renderLogo();
   </script>
 </body>
 </html>

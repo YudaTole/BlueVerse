@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logo Generator</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      padding: 20px; 
+      background: #f7f7f7;
+    }
+    canvas { 
+      border: 1px solid #ddd; 
+      margin-top: 20px; 
+      background: #fff; 
+    }
+    input, button { 
+      margin: 5px; 
+      padding: 8px; 
+      border-radius: 5px; 
+      border: 1px solid #ccc; 
+    }
+    button { 
+      background: #007bff; 
+      color: white; 
+      cursor: pointer; 
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>Custom Logo Generator</h2>
+
+  <!-- Input -->
+  <input type="text" id="text1" value="Blue">
+  <input type="text" id="text2" value="Archive"><br>
+  
+  <input type="color" id="color1" value="#007BFF">
+  <input type="color" id="color2" value="#000000"><br>
+  
+  <button onclick="generate()">Generate</button>
+  <button onclick="save()">Save</button>
+
+  <!-- Canvas -->
+  <canvas id="logoCanvas" width="500" height="200"></canvas>
+
+  <script>
+    function generate() {
+      let c = document.getElementById("logoCanvas");
+      let ctx = c.getContext("2d");
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      let text1 = document.getElementById("text1").value;
+      let text2 = document.getElementById("text2").value;
+      let color1 = document.getElementById("color1").value;
+      let color2 = document.getElementById("color2").value;
+
+      ctx.font = "bold 48px Arial";
+      ctx.fillStyle = color1;
+      ctx.fillText(text1, 50, 100);
+
+      ctx.fillStyle = color2;
+      ctx.fillText(text2, 200, 100);
+
+      // Garis silang sederhana
+      ctx.strokeStyle = color1;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(180, 30);
+      ctx.lineTo(260, 140);
+      ctx.stroke();
+    }
+
+    function save() {
+      let c = document.getElementById("logoCanvas");
+      let link = document.createElement('a');
+      link.download = 'logo.png';
+      link.href = c.toDataURL("image/png");
+      link.click();
+    }
+
+    // Generate awal
+    window.onload = generate;
+  </script>
+</body>
+</html>

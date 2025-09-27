@@ -2,95 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlueArchive-Style Logo Generator</title>
+  <title>BlueVerse Logo</title>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     body {
-      font-family: "Arial", sans-serif;
-      text-align: center;
-      padding: 20px;
-      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #fff;
     }
     #logo {
-      margin: 20px auto;
-      width: 90%;
-      max-width: 600px;
+      display: inline-block;
+      padding: 20px;
     }
-    .input-box {
-      margin: 5px;
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+    .blue {
+      fill: #1e90ff;
+      font-weight: bold;
+      font-style: italic;
+    }
+    .black {
+      fill: #222;
+      font-weight: bold;
+      font-style: italic;
+    }
+    .subtext {
+      fill: #444;
+      font-size: 28px;
+      font-style: italic;
     }
     button {
-      margin: 5px;
-      padding: 8px 16px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
       border: none;
-      border-radius: 6px;
-      background: #0d6efd;
+      background: #1e90ff;
       color: white;
       cursor: pointer;
-      font-size: 15px;
     }
     button:hover {
-      background: #0b5ed7;
+      background: #0c70d4;
     }
   </style>
 </head>
 <body>
-  <h2>BlueArchive-Style Logo Generator</h2>
-  
-  <input id="text1" class="input-box" type="text" value="Yudz" placeholder="Kata kiri (biru)">
-  <input id="text2" class="input-box" type="text" value="Senpai" placeholder="Kata kanan (hitam)">
-  <input id="subtext" class="input-box" type="text" value="BlueVerse" placeholder="Subtext">
-  <br>
-  <button onclick="generateLogo()">Generate</button>
-  <button onclick="downloadSVG()">Save</button>
-
   <div id="logo">
-    <!-- SVG hasil akan masuk di sini -->
+    <svg width="600" height="250" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tulisan BlueVerse -->
+      <text x="40" y="120" font-size="80" letter-spacing="-2px">
+        <tspan class="blue">Blue</tspan><tspan class="black">Verse</tspan>
+      </text>
+
+      <!-- Orbit ellipse -->
+      <ellipse cx="320" cy="90" rx="120" ry="40"
+        stroke="#000" stroke-width="3" fill="none"
+        transform="rotate(-15,320,90)" />
+
+      <!-- Cross light -->
+      <line x1="320" y1="10" x2="320" y2="170"
+        stroke="#1e90ff" stroke-width="4" />
+      <line x1="250" y1="50" x2="420" y2="130"
+        stroke="#1e90ff" stroke-width="4" />
+
+      <!-- Subtext Unit1 -->
+      <text x="420" y="190" class="subtext">Unit1</text>
+    </svg>
   </div>
 
+  <button onclick="saveLogo()">Save as PNG</button>
+
   <script>
-    function generateLogo() {
-      const t1 = document.getElementById("text1").value;
-      const t2 = document.getElementById("text2").value;
-      const sub = document.getElementById("subtext").value;
-
-      const svg = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="600" height="180" viewBox="0 0 600 180">
-        <!-- Orbit ellipse -->
-        <ellipse cx="310" cy="90" rx="120" ry="40" 
-          transform="rotate(-20, 310, 90)" 
-          stroke="#1E90FF" stroke-width="3" fill="none" />
-
-        <!-- Text kiri (biru) -->
-        <text x="120" y="95" font-size="48" font-weight="bold" fill="#1E90FF">${t1}</text>
-
-        <!-- Text kanan (hitam) -->
-        <text x="280" y="95" font-size="48" font-weight="bold" fill="#222">${t2}</text>
-
-        <!-- Subtext kecil -->
-        <text x="280" y="130" font-size="20" fill="#666">${sub}</text>
-      </svg>`;
-
-      document.getElementById("logo").innerHTML = svg;
+    function saveLogo() {
+      const logo = document.getElementById("logo");
+      html2canvas(logo, {backgroundColor: null}).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "blueverse_logo.png";
+        link.href = canvas.toDataURL();
+        link.click();
+      });
     }
-
-    function downloadSVG() {
-      const svg = document.getElementById("logo").innerHTML;
-      const blob = new Blob([svg], { type: "image/svg+xml" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "bluearchive_logo.svg";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // Generate awal
-    generateLogo();
   </script>
 </body>
 </html>

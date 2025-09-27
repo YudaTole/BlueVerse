@@ -2,29 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Logo Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueArchive-Style Logo Generator</title>
   <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      text-align: center; 
-      padding: 20px; 
-      background: #f7f7f7;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+      background: #f8f8f8;
     }
-    canvas { 
-      border: 1px solid #ddd; 
-      margin-top: 20px; 
-      background: #fff; 
+    h2 {
+      margin-bottom: 10px;
     }
-    input, button { 
-      margin: 5px; 
-      padding: 8px; 
-      border-radius: 5px; 
-      border: 1px solid #ccc; 
+    .input-area {
+      margin: 10px 0;
     }
-    button { 
-      background: #007bff; 
-      color: white; 
-      cursor: pointer; 
+    input {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    canvas {
+      margin-top: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    .color-picker {
+      margin: 0 10px;
+    }
+    button {
+      margin: 8px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
     }
     button:hover {
       background: #0056b3;
@@ -32,58 +50,85 @@
   </style>
 </head>
 <body>
-  <h2>Custom Logo Generator</h2>
+  <h2>BlueArchive-Style Logo Generator</h2>
+  <div class="input-area">
+    <input type="text" id="leftText" value="Blue">
+    <input type="text" id="rightText" value="Archive">
+  </div>
+  <div class="input-area">
+    <input type="text" id="subText" value="BlueVerse" placeholder="Subtitle (optional)">
+  </div>
 
-  <!-- Input -->
-  <input type="text" id="text1" value="Blue">
-  <input type="text" id="text2" value="Archive"><br>
-  
-  <input type="color" id="color1" value="#007BFF">
-  <input type="color" id="color2" value="#000000"><br>
-  
-  <button onclick="generate()">Generate</button>
-  <button onclick="save()">Save</button>
+  <canvas id="logoCanvas" width="600" height="200"></canvas>
 
-  <!-- Canvas -->
-  <canvas id="logoCanvas" width="500" height="200"></canvas>
+  <div class="controls">
+    <label class="color-picker">
+      <input type="color" id="pointColor" value="#007BFF"> Change Point Color
+    </label>
+    <label class="color-picker">
+      <input type="color" id="textColor" value="#222222"> Change Text Color
+    </label>
+  </div>
+
+  <button onclick="generateLogo()">Generate</button>
+  <button onclick="saveLogo()">Save</button>
 
   <script>
-    function generate() {
-      let c = document.getElementById("logoCanvas");
-      let ctx = c.getContext("2d");
-      ctx.clearRect(0, 0, c.width, c.height);
+    const canvas = document.getElementById("logoCanvas");
+    const ctx = canvas.getContext("2d");
 
-      let text1 = document.getElementById("text1").value;
-      let text2 = document.getElementById("text2").value;
-      let color1 = document.getElementById("color1").value;
-      let color2 = document.getElementById("color2").value;
+    function generateLogo() {
+      const leftText = document.getElementById("leftText").value;
+      const rightText = document.getElementById("rightText").value;
+      const subText = document.getElementById("subText").value;
+      const pointColor = document.getElementById("pointColor").value;
+      const textColor = document.getElementById("textColor").value;
 
-      ctx.font = "bold 48px Arial";
-      ctx.fillStyle = color1;
-      ctx.fillText(text1, 50, 100);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = color2;
-      ctx.fillText(text2, 200, 100);
+      ctx.textBaseline = "middle";
 
-      // Garis silang sederhana
-      ctx.strokeStyle = color1;
-      ctx.lineWidth = 3;
+      // Left Text (Blue)
+      ctx.font = "bold 48px Orbitron, Arial";
+      ctx.fillStyle = pointColor;
+      ctx.fillText(leftText, 40, 80);
+
+      // Right Text (Archive)
+      ctx.font = "bold 48px Orbitron, Arial";
+      ctx.fillStyle = textColor;
+      ctx.fillText(rightText, 200, 80);
+
+      // Subtitle
+      if (subText.trim() !== "") {
+        ctx.font = "20px Orbitron, Arial";
+        ctx.fillText(subText, 200, 120);
+      }
+
+      // Cross Line + Orbit
+      ctx.strokeStyle = pointColor;
+      ctx.lineWidth = 2;
+
+      // diagonal line
       ctx.beginPath();
-      ctx.moveTo(180, 30);
-      ctx.lineTo(260, 140);
+      ctx.moveTo(180, 40);
+      ctx.lineTo(260, 130);
+      ctx.stroke();
+
+      // ellipse orbit
+      ctx.beginPath();
+      ctx.ellipse(230, 80, 70, 25, Math.PI / 6, 0, 2 * Math.PI);
       ctx.stroke();
     }
 
-    function save() {
-      let c = document.getElementById("logoCanvas");
-      let link = document.createElement('a');
-      link.download = 'logo.png';
-      link.href = c.toDataURL("image/png");
+    function saveLogo() {
+      const link = document.createElement("a");
+      link.download = "logo.png";
+      link.href = canvas.toDataURL("image/png");
       link.click();
     }
 
-    // Generate awal
-    window.onload = generate;
+    // Auto-generate on load
+    generateLogo();
   </script>
 </body>
 </html>
